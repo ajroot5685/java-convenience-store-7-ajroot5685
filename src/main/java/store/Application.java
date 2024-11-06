@@ -1,7 +1,10 @@
 package store;
 
+import store.execution.StoreSimulator;
+
 public class Application {
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        StoreSimulator storeSimulator = new StoreSimulator();
+        storeSimulator.run();
     }
 }
