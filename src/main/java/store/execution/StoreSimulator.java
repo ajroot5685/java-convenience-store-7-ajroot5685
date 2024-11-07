@@ -1,5 +1,6 @@
 package store.execution;
 
+import store.controller.SupplyController;
 import store.injection.ObjectFactory;
 import store.view.GreetView;
 
@@ -15,5 +16,8 @@ public class StoreSimulator {
 
     public void run() {
         greetView.printGreetMessage();
+
+        SupplyController supplyController = objectFactory.supplyController();
+        supplyController.save();
     }
 }
