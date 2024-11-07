@@ -1,5 +1,7 @@
 package store.file;
 
+import static store.constant.ExceptionMessage.FILE_PARSING_ERROR;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +19,8 @@ public class ConvenienceDataReader {
              BufferedReader br = new BufferedReader(new InputStreamReader(is))
         ) {
             add(br, datas);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(FILE_PARSING_ERROR, e);
         }
         return datas;
     }
