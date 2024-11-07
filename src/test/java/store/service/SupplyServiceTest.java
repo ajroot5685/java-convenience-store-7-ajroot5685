@@ -7,8 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.entity.Promotion;
 import store.file.ConvenienceDataReader;
+import store.model.ProductModel;
 import store.model.PromotionModel;
-import store.parse.Parser;
+import store.parse.ProductParser;
 import store.parse.PromotionParser;
 
 class SupplyServiceTest {
@@ -19,14 +20,16 @@ class SupplyServiceTest {
 
     @BeforeEach
     void init() {
-        String fileName = "promotions.md";
         ConvenienceDataReader convenienceDataReader = new ConvenienceDataReader();
-        Parser<Promotion> promotionParser = new PromotionParser();
         promotionModel = new PromotionModel();
-        PromotionService promotionService = new PromotionService(fileName, convenienceDataReader, promotionParser,
-                promotionModel);
 
-        supplyService = new SupplyService(promotionService);
+        PromotionService promotionService = new PromotionService("promotions.md", convenienceDataReader,
+                new PromotionParser(),
+                promotionModel);
+        ProductService productService = new ProductService("products.md", convenienceDataReader, new ProductParser(),
+                new ProductModel());
+
+        supplyService = new SupplyService(productService, promotionService);
     }
 
     @Test
