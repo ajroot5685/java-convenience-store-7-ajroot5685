@@ -1,5 +1,6 @@
 package store.injection;
 
+import store.builder.ProductOutputBuilder;
 import store.controller.SupplyController;
 import store.dto.ProductDto;
 import store.entity.Promotion;
@@ -25,9 +26,10 @@ public class ObjectFactory {
     private final ConvenienceDataReader convenienceDataReader = new ConvenienceDataReader();
     private final Parser<ProductDto> productParser = new ProductDtoParser();
     private final Parser<Promotion> promotionParser = new PromotionParser();
+    private final ProductOutputBuilder productOutputBuilder = new ProductOutputBuilder();
 
     public SupplyController supplyController() {
-        return new SupplyController(inputView, supplyService());
+        return new SupplyController(inputView, outputView, supplyService());
     }
 
     private SupplyService supplyService() {
@@ -35,7 +37,8 @@ public class ObjectFactory {
     }
 
     private ProductService productService() {
-        return new ProductService(productFileName, convenienceDataReader, productParser, productModel());
+        return new ProductService(productFileName, convenienceDataReader, productParser, productOutputBuilder,
+                productModel());
     }
 
     private PromotionService promotionService() {
