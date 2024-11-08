@@ -2,9 +2,8 @@ package store.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
+import store.dto.ProductDto;
 import store.entity.Product;
 
 class ProductModelTest {
@@ -12,33 +11,58 @@ class ProductModelTest {
     private final ProductModel productModel = new ProductModel();
 
     @Test
-    void Product_리스트로_정상적으로_초기화된다() {
+    void 프로모션_상품이_정상적으로_저장된다() {
         // given
-        List<Product> products = new ArrayList<>();
-        products.add(new Product("제품1", 1000, 5, "탄산2+1"));
-        products.add(new Product("제품2", 3000, 6, "MD추천상품"));
+        String name = "콜라";
+        Integer price = 1000;
+        Integer quantity = 10;
+        String promotion = "탄산2+1";
+        ProductDto productDto = new ProductDto(name, price, quantity, promotion);
 
         // when
-        productModel.init(products);
+        productModel.add(productDto);
 
         // then
-        List<Product> storedProducts = productModel.getProducts();
-        assertThat(storedProducts.size()).isEqualTo(2);
+        Product product = productModel.getProducts().get(name);
+        assertThat(product.getName()).isEqualTo(name);
+        assertThat(product.getPrice()).isEqualTo(price);
+        assertThat(product.getPromotionQuantity()).isEqualTo(quantity);
+        assertThat(product.getPromotion()).isEqualTo(promotion);
+    }
+
+    @Test
+    void 일반_상품이_정상적으로_저장된다() {
+        // given
+        String name = "콜라";
+        Integer price = 1000;
+        Integer quantity = 10;
+        String promotion = null;
+        ProductDto productDto = new ProductDto(name, price, quantity, promotion);
+
+        // when
+        productModel.add(productDto);
+
+        // then
+        Product product = productModel.getProducts().get(name);
+        assertThat(product.getName()).isEqualTo(name);
+        assertThat(product.getPrice()).isEqualTo(price);
+        assertThat(product.getQuantity()).isEqualTo(quantity);
+        assertThat(product.getPromotion()).isNull();
     }
 
     @Test
     void 방어적_읽기로_인해_내부_데이터를_악의적으로_조작할_수_없다() {
         // given
-        List<Product> products = new ArrayList<>();
-        products.add(new Product("제품1", 1000, 5, "탄산2+1"));
-        productModel.init(products);
+        String name = "콜라";
+        productModel.add(new ProductDto(name, 1000, 10, null));
 
         // when
-        List<Product> defensiveData = productModel.getProducts();
-        defensiveData.add(new Product("싼상품", 100, 999, "공짜 프로모션"));
+        Integer badQuantity = 99999;
+        Product defensiveProduct = productModel.getProducts().get(name);
+        defensiveProduct.setQuantity(badQuantity);
 
         // then
-        List<Product> newDefensiveData = productModel.getProducts();
-        assertThat(newDefensiveData.size()).isEqualTo(1);
+        Product newDefensiveProduct = productModel.getProducts().get(name);
+        assertThat(newDefensiveProduct.getQuantity()).isNotEqualTo(badQuantity);
     }
 }

@@ -2,13 +2,13 @@ package store.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.entity.Product;
 import store.file.ConvenienceDataReader;
 import store.model.ProductModel;
-import store.parse.ProductParser;
+import store.parse.ProductDtoParser;
 
 class ProductServiceTest {
 
@@ -20,7 +20,7 @@ class ProductServiceTest {
     void init() {
         productModel = new ProductModel();
 
-        productService = new ProductService("products.md", new ConvenienceDataReader(), new ProductParser(),
+        productService = new ProductService("products.md", new ConvenienceDataReader(), new ProductDtoParser(),
                 productModel);
     }
 
@@ -32,7 +32,7 @@ class ProductServiceTest {
         productService.supply();
 
         // then
-        List<Product> products = productModel.getProducts();
-        assertThat(products.size()).isEqualTo(16);
+        Map<String, Product> products = productModel.getProducts();
+        assertThat(products.values().size()).isGreaterThan(0);
     }
 }

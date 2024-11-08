@@ -9,7 +9,7 @@ import store.entity.Promotion;
 import store.file.ConvenienceDataReader;
 import store.model.ProductModel;
 import store.model.PromotionModel;
-import store.parse.ProductParser;
+import store.parse.ProductDtoParser;
 import store.parse.PromotionParser;
 
 class SupplyServiceTest {
@@ -26,7 +26,7 @@ class SupplyServiceTest {
         PromotionService promotionService = new PromotionService("promotions.md", convenienceDataReader,
                 new PromotionParser(),
                 promotionModel);
-        ProductService productService = new ProductService("products.md", convenienceDataReader, new ProductParser(),
+        ProductService productService = new ProductService("products.md", convenienceDataReader, new ProductDtoParser(),
                 new ProductModel());
 
         supplyService = new SupplyService(productService, promotionService);

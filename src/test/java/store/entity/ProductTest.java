@@ -10,13 +10,14 @@ class ProductTest {
         // given
         String name = "콜라";
         Integer price = 1000;
+        Integer promotionQuantity = 10;
         Integer quantity = 10;
         String promotion = "탄산2+1";
 
         // when
 
         // then
-        Assertions.assertThatCode(() -> new Product(name, price, quantity, promotion))
+        Assertions.assertThatCode(() -> new Product(name, price, promotionQuantity, quantity, promotion))
                 .doesNotThrowAnyException();
     }
 }

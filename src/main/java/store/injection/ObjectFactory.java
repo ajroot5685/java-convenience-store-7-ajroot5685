@@ -1,13 +1,13 @@
 package store.injection;
 
 import store.controller.SupplyController;
-import store.entity.Product;
+import store.dto.ProductDto;
 import store.entity.Promotion;
 import store.file.ConvenienceDataReader;
 import store.model.ProductModel;
 import store.model.PromotionModel;
 import store.parse.Parser;
-import store.parse.ProductParser;
+import store.parse.ProductDtoParser;
 import store.parse.PromotionParser;
 import store.service.ProductService;
 import store.service.PromotionService;
@@ -23,7 +23,7 @@ public class ObjectFactory {
     private final InputView inputView = new InputView();
     private final OutputView outputView = new OutputView();
     private final ConvenienceDataReader convenienceDataReader = new ConvenienceDataReader();
-    private final Parser<Product> productParser = new ProductParser();
+    private final Parser<ProductDto> productParser = new ProductDtoParser();
     private final Parser<Promotion> promotionParser = new PromotionParser();
 
     public SupplyController supplyController() {
