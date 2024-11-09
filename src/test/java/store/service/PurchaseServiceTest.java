@@ -1,10 +1,12 @@
 package store.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.builder.ProductOutputBuilder;
+import store.builder.ReceiptBuilder;
 import store.file.ConvenienceDataReader;
 import store.model.CartModel;
 import store.model.ProductModel;
@@ -29,8 +31,9 @@ class PurchaseServiceTest {
                 new ProductDtoParser(), new ProductOutputBuilder(), productModel);
         PromotionService promotionService = new PromotionService("promotions.md", new ConvenienceDataReader(),
                 new PromotionParser(), new PromotionModel());
-        this.purchaseService = new PurchaseService(productService, promotionService, new PurchaseInputParser(),
-                cartModel);
+        this.purchaseService = new PurchaseService(productService, promotionService, new CartService(cartModel),
+                new PurchaseInputParser(),
+                cartModel, new ReceiptBuilder());
     }
 
     @Test
@@ -46,5 +49,18 @@ class PurchaseServiceTest {
         assertThat(productModel.getProducts().get("콜라").getQuantity()).isEqualTo(0);
         // 방어적 읽기로 인해 확인 불가
 //        assertThat(cartModel.getItems().get("콜라").getQuantity()).isEqualTo(10);
+    }
+
+    @Test
+    void 영수증_출력에_성공한다() {
+        // given
+        productService.supply();
+        purchaseService.purchase("[콜라-10],[사이다-3]");
+
+        // when
+
+        // then
+        assertThatCode(() -> purchaseService.getCalculateResult())
+                .doesNotThrowAnyException();
     }
 }
