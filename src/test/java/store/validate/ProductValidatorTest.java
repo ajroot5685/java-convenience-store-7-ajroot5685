@@ -4,19 +4,20 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import camp.nextstep.edu.missionutils.Randoms;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import store.dto.ProductDto;
 import store.entity.Product;
 
 class ProductValidatorTest {
 
-    @Test
-    void 상품_정보_추가_전_검증에_성공한다() {
+    @ParameterizedTest
+    @MethodSource("generateCorrectObjects")
+    void 상품_정보_추가_전_검증에_성공한다(ProductDto productDto, Product product) {
         // give
-        ProductDto productDto = new ProductDto("콜라", 1000, 10, null);
-        Product product = new Product("콜라", 1000, 0, 0, null);
 
         // when
 
@@ -76,5 +77,27 @@ class ProductValidatorTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .extracting(Throwable::getMessage)
                 .isEqualTo("같은 상품 정보가 여러개 들어왔습니다. 하나의 상품 정보로 통합해주세요.");
+    }
+
+
+    private static Stream<Object[]> generateCorrectObjects() {
+        return Stream.of(
+                new Object[]{
+                        new ProductDto("콜라", 1000, 10, null),
+                        new Product("콜라", 1000, 0, 0, null)
+                },
+                new Object[]{
+                        new ProductDto("콜라", 1000, 10, null),
+                        new Product("콜라", 1000, 5, 0, null)
+                },
+                new Object[]{
+                        new ProductDto("콜라", 1000, 10, "탄산2+1"),
+                        new Product("콜라", 1000, 0, 0, null)
+                },
+                new Object[]{
+                        new ProductDto("콜라", 1000, 10, "탄산2+1"),
+                        new Product("콜라", 1000, 0, 5, null)
+                }
+        );
     }
 }
