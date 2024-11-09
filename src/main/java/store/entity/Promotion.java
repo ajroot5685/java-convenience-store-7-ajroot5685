@@ -21,4 +21,21 @@ public class Promotion {
     public String getName() {
         return name;
     }
+
+    public Integer getBuy() {
+        return buy;
+    }
+
+    public Integer getGet() {
+        return get;
+    }
+
+    public boolean checkDate(LocalDate now) {
+        return (now.isEqual(startDate) || now.isAfter(startDate)) &&
+                (now.isEqual(endDate) || now.isBefore(endDate));
+    }
+
+    public Integer applicableCount(Integer quantity) {
+        return quantity - quantity % (buy + get);
+    }
 }

@@ -2,7 +2,7 @@ package store.dto;
 
 public record CalculateProductDto(
         String name,
-        Integer quantity,
+        Long quantity,
         Long totalPrice
 ) {
 }

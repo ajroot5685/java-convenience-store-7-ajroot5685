@@ -98,18 +98,4 @@ class ProductServiceTest {
                 .extracting(Throwable::getMessage)
                 .isEqualTo(PRODUCT_NOT_FOUND);
     }
-
-    @Test
-    void 상품_재고를_감소시킨다() {
-        // given
-        productService.supply();
-        PurchaseDto purchaseDto = new PurchaseDto("콜라", 5);
-
-        // when
-        productService.decreaseStock(purchaseDto);
-
-        // then
-        Product product = productService.getByName(purchaseDto.name());
-        assertThat(product.getQuantity()).isEqualTo(5);
-    }
 }

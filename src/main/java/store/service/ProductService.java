@@ -1,11 +1,8 @@
 package store.service;
 
-import static store.constant.ExceptionMessage.PRODUCT_NOT_FOUND;
-
 import java.util.List;
 import store.builder.ProductOutputBuilder;
 import store.dto.ProductDto;
-import store.dto.PurchaseDto;
 import store.entity.Product;
 import store.file.ConvenienceDataReader;
 import store.model.ProductModel;
@@ -43,20 +40,5 @@ public class ProductService {
         List<Product> products = productModel.getProducts().values().stream()
                 .toList();
         productOutputBuilder.build(sb, products);
-    }
-
-    public void validateStock(List<PurchaseDto> purchaseDtos) {
-        for (PurchaseDto purchaseDto : purchaseDtos) {
-            productModel.validateAvailability(purchaseDto.name(), purchaseDto.quantity());
-        }
-    }
-
-    public Product getByName(String name) {
-        return productModel.findByName(name)
-                .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
-    }
-
-    public void decreaseStock(PurchaseDto purchaseDto) {
-        productModel.decrease(purchaseDto.name(), purchaseDto.quantity());
     }
 }

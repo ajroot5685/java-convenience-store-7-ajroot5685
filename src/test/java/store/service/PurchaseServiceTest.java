@@ -12,7 +12,6 @@ import store.model.CartModel;
 import store.model.ProductModel;
 import store.model.PromotionModel;
 import store.parse.ProductDtoParser;
-import store.parse.PromotionParser;
 import store.parse.PurchaseInputParser;
 
 class PurchaseServiceTest {
@@ -27,13 +26,11 @@ class PurchaseServiceTest {
     void init() {
         productModel = new ProductModel();
         cartModel = new CartModel();
+        PromotionModel promotionModel = new PromotionModel();
         productService = new ProductService("products.md", new ConvenienceDataReader(),
                 new ProductDtoParser(), new ProductOutputBuilder(), productModel);
-        PromotionService promotionService = new PromotionService("promotions.md", new ConvenienceDataReader(),
-                new PromotionParser(), new PromotionModel());
-        this.purchaseService = new PurchaseService(productService, promotionService, new CartService(cartModel),
-                new PurchaseInputParser(),
-                cartModel, new ReceiptBuilder());
+        this.purchaseService = new PurchaseService(productModel, promotionModel, new CartService(cartModel),
+                new PurchaseInputParser(), new ReceiptBuilder());
     }
 
     @Test

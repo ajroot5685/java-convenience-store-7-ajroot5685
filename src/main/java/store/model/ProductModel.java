@@ -1,7 +1,5 @@
 package store.model;
 
-import static store.constant.ExceptionMessage.PRODUCT_NOT_FOUND;
-import static store.constant.ExceptionMessage.PRODUCT_QUANTITY_INSUFFICIENT;
 import static store.validate.ProductValidator.validateBeforeInsert;
 
 import java.util.LinkedHashMap;
@@ -43,20 +41,15 @@ public class ProductModel {
         product.setPromotionQuantity(productDto.quantity());
     }
 
-    public void validateAvailability(String name, Integer quantity) {
-        if (!products.containsKey(name)) {
-            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
-        }
-        if (products.get(name).getQuantity() < quantity) {
-            throw new IllegalArgumentException(PRODUCT_QUANTITY_INSUFFICIENT);
-        }
-    }
-
     public Optional<Product> findByName(String name) {
         return Optional.ofNullable(products.get(name));
     }
 
-    public void decrease(String name, Integer quantity) {
+    public void decrease(String name, Integer quantity, boolean isPromotion) {
+        if (isPromotion) {
+            products.get(name).decreasePromotionQuantity(quantity);
+            return;
+        }
         products.get(name).decreaseQuantity(quantity);
     }
 }

@@ -59,4 +59,8 @@ public class Product {
     public void decreaseQuantity(Integer quantity) {
         this.quantity -= quantity;
     }
+
+    public void decreasePromotionQuantity(Integer quantity) {
+        this.promotionQuantity -= quantity;
+    }
 }

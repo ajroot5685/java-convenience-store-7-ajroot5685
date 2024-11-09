@@ -14,7 +14,6 @@ import store.parse.Parser;
 import store.parse.ProductDtoParser;
 import store.parse.PromotionParser;
 import store.parse.PurchaseInputParser;
-import store.service.CartService;
 import store.service.ProductService;
 import store.service.PromotionService;
 import store.service.PurchaseService;
@@ -56,10 +55,9 @@ public class ObjectFactory {
             productParser, productOutputBuilder, productModel);
     private final PromotionService promotionService = new PromotionService(promotionFileName, convenienceDataReader,
             promotionParser, promotionModel);
-    private final CartService cartService = new CartService(cartModel);
     private final SupplyService supplyService = new SupplyService(productService, promotionService);
-    private final PurchaseService purchaseService = new PurchaseService(productService, promotionService, cartService,
-            purchaseInputParser, cartModel, receiptBuilder);
+    private final PurchaseService purchaseService = new PurchaseService(productModel, promotionModel, cartModel,
+            purchaseInputParser, receiptBuilder);
 
     // controller
     public final SupplyController supplyController = new SupplyController(outputView, supplyService);
