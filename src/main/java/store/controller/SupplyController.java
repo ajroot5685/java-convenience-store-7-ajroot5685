@@ -2,17 +2,14 @@ package store.controller;
 
 import store.constant.Message;
 import store.service.SupplyService;
-import store.view.InputView;
 import store.view.OutputView;
 
 public class SupplyController {
 
-    private final InputView inputView;
     private final OutputView outputView;
     private final SupplyService supplyService;
 
-    public SupplyController(InputView inputView, OutputView outputView, SupplyService supplyService) {
-        this.inputView = inputView;
+    public SupplyController(OutputView outputView, SupplyService supplyService) {
         this.outputView = outputView;
         this.supplyService = supplyService;
     }
