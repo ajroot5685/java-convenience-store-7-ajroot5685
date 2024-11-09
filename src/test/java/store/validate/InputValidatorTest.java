@@ -2,6 +2,7 @@ package store.validate;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static store.constant.ExceptionMessage.WRONG_INPUT;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -66,5 +67,31 @@ class InputValidatorTest {
         // then
         assertThatThrownBy(() -> inputValidator.validatePurchaseInput(input))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"Y", "N"})
+    void 사용자가_선택_질의에_대해_올바르게_입력한다(String input) {
+        // given
+
+        // when
+
+        // then
+        assertThatCode(() -> inputValidator.validateChooseInput(input))
+                .doesNotThrowAnyException();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"y", "n", ".", "", "\n", "\t", "NO"})
+    void 사용자가_선택_질의에_대해_잘못된_값을_입력한다(String input) {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> inputValidator.validateChooseInput(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .extracting(Throwable::getMessage)
+                .isEqualTo(WRONG_INPUT);
     }
 }

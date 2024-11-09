@@ -6,6 +6,7 @@ import static store.constant.ExceptionMessage.PRODUCT_NAME_KOREAN;
 import static store.constant.ExceptionMessage.PRODUCT_SEPARATOR_HYPHEN;
 import static store.constant.ExceptionMessage.PRODUCT_START_WITH_LEFT_SQUARE_BRACKET;
 import static store.constant.ExceptionMessage.QUANTITY_POSITIVE_INTEGER;
+import static store.constant.ExceptionMessage.WRONG_INPUT;
 
 public class InputValidator {
 
@@ -15,6 +16,7 @@ public class InputValidator {
     private final String EMPTY_REGEX = ".*\\s+.*";
     private final String KOREAN_REGEX = "^[가-힣]+$";
     private final String SQUARE_BRACKET_REGEX = "[\\[\\]]";
+    private final String CHOOSE_REGEX = "^[YN]$";
     private final String LEFT_SQUARE_BRACKET = "[";
     private final String RIGHT_SQUARE_BRACKET = "]";
     private final int SINGLE_PRODUCT_FORMAT_SIZE = 2;
@@ -78,6 +80,12 @@ public class InputValidator {
             return value > 0;
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+
+    public void validateChooseInput(String input) {
+        if (!input.matches(CHOOSE_REGEX)) {
+            throw new IllegalArgumentException(WRONG_INPUT);
         }
     }
 }
