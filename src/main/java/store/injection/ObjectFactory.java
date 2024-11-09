@@ -1,6 +1,7 @@
 package store.injection;
 
 import store.builder.ProductOutputBuilder;
+import store.builder.ReceiptBuilder;
 import store.controller.PurchaseController;
 import store.controller.SupplyController;
 import store.dto.ProductDto;
@@ -13,6 +14,7 @@ import store.parse.Parser;
 import store.parse.ProductDtoParser;
 import store.parse.PromotionParser;
 import store.parse.PurchaseInputParser;
+import store.service.CartService;
 import store.service.ProductService;
 import store.service.PromotionService;
 import store.service.PurchaseService;
@@ -38,6 +40,7 @@ public class ObjectFactory {
 
     // builder
     private final ProductOutputBuilder productOutputBuilder = new ProductOutputBuilder();
+    private final ReceiptBuilder receiptBuilder = new ReceiptBuilder();
 
     // view
     private final InputView inputView = new InputView();
@@ -53,12 +56,13 @@ public class ObjectFactory {
             productParser, productOutputBuilder, productModel);
     private final PromotionService promotionService = new PromotionService(promotionFileName, convenienceDataReader,
             promotionParser, promotionModel);
+    private final CartService cartService = new CartService(cartModel);
     private final SupplyService supplyService = new SupplyService(productService, promotionService);
-    private final PurchaseService purchaseService = new PurchaseService(productService, promotionService,
-            purchaseInputParser, cartModel);
+    private final PurchaseService purchaseService = new PurchaseService(productService, promotionService, cartService,
+            purchaseInputParser, cartModel, receiptBuilder);
 
     // controller
     public final SupplyController supplyController = new SupplyController(outputView, supplyService);
-    public final PurchaseController purchaseController = new PurchaseController(inputView, inputValidator,
+    public final PurchaseController purchaseController = new PurchaseController(inputView, outputView, inputValidator,
             purchaseService);
 }

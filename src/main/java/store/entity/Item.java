@@ -1,5 +1,7 @@
 package store.entity;
 
+import store.dto.CalculateProductDto;
+
 public class Item {
 
     private final String name;
@@ -30,5 +32,13 @@ public class Item {
 
     public void buy(Integer quantity) {
         this.quantity += quantity;
+    }
+
+    public Long calculateTotalPrice() {
+        return (long) price * quantity;
+    }
+
+    public CalculateProductDto calculate() {
+        return new CalculateProductDto(name, quantity, calculateTotalPrice());
     }
 }
