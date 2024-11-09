@@ -18,10 +18,10 @@ public class StoreSimulator {
     public void run() {
         greetView.printGreetMessage();
 
-        SupplyController supplyController = objectFactory.supplyController();
+        SupplyController supplyController = objectFactory.supplyController;
         supplyController.save();
 
-        PurchaseController purchaseController = objectFactory.purchaseController();
+        PurchaseController purchaseController = objectFactory.purchaseController;
         purchaseController.purchase();
     }
 }
