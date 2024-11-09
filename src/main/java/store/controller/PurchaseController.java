@@ -20,5 +20,6 @@ public class PurchaseController {
         inputView.printPurchaseGuide();
         String input = inputView.getInput();
         inputValidator.validatePurchaseInput(input);
+        purchaseService.purchase(input);
     }
 }

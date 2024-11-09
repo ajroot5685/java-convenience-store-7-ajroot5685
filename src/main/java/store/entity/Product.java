@@ -55,4 +55,8 @@ public class Product {
     public static Product create(String name, Integer price) {
         return new Product(name, price, 0, 0, null);
     }
+
+    public void decreaseQuantity(Integer quantity) {
+        this.quantity -= quantity;
+    }
 }
