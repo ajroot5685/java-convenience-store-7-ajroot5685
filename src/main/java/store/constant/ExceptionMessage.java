@@ -4,6 +4,9 @@ public class ExceptionMessage {
 
     public static final String FILE_COLUMN_SIZE_WRONG = "파일의 컬럼 개수가 잘못되었습니다.";
     public static final String FILE_PARSING_ERROR = "파일 파싱 중 오류가 발생했습니다.";
+    public static final String FILE_PRICE_ERROR = "상품의 정상가격과 프로모션 가격은 같아야 합니다.";
+    public static final String FILE_PROMOTION_PRODUCT_DUPLICATE = "같은 상품의 프로모션 정보가 여러개 들어왔습니다. 하나의 상품 정보로 통합해주세요.";
+    public static final String FILE_NORMAL_PRODUCT_DUPLICATE = "같은 상품 정보가 여러개 들어왔습니다. 하나의 상품 정보로 통합해주세요.";
 
     public static final String INPUT_CANT_EMPTY = "공백은 입력할 수 없습니다.";
     public static final String PRODUCT_START_WITH_LEFT_SQUARE_BRACKET = "개별상품은 '['로 시작해야 합니다.";
