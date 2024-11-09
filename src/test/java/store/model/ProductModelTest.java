@@ -1,8 +1,13 @@
 package store.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import store.dto.ProductDto;
 import store.entity.Product;
 
@@ -64,5 +69,63 @@ class ProductModelTest {
         // then
         Product newDefensiveProduct = productModel.getProducts().get(name);
         assertThat(newDefensiveProduct.getQuantity()).isNotEqualTo(badQuantity);
+    }
+
+    @Test
+    void 구매가능_상품인지_검증하는_로직에_성공한다() {
+        // given
+        productModel.add(new ProductDto("콜라", 1000, 10, null));
+
+        // when
+        String name = "콜라";
+        Integer buyQuantity = 10;
+
+        // then
+        assertThatCode(() -> productModel.validateAvailability(name, buyQuantity))
+                .doesNotThrowAnyException();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'없는상품', 10",
+            "'콜라', 1000",
+    })
+    void 구매가능_상품인지_검증하는_로직에_실패한다(String name, Integer buyQuantity) {
+        // given
+        productModel.add(new ProductDto("콜라", 1000, 10, null));
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> productModel.validateAvailability(name, buyQuantity))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 조회할_때_상품이_없어도_에러가_나지_않는다() {
+        // given
+        productModel.add(new ProductDto("콜라", 1000, 10, null));
+        String name = "없는상품";
+
+        // when
+        Optional<Product> productOptional = productModel.findByName(name);
+
+        // then
+        assertThat(productOptional.isEmpty()).isTrue();
+    }
+
+    @Test
+    void 상품의_수량을_감소시킨다() {
+        // given
+        productModel.add(new ProductDto("콜라", 1000, 10, null));
+        String name = "콜라";
+        Integer quantity = 2;
+
+        // when
+        productModel.decrease(name, quantity);
+
+        // then
+        Product product = productModel.getProducts().get(name);
+        assertThat(product.getQuantity()).isEqualTo(8);
     }
 }
