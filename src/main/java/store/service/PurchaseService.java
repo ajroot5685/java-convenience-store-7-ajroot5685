@@ -23,16 +23,19 @@ import store.view.ProcessView;
 public class PurchaseService {
 
     private final ProcessView processView;
+    private final ProductService productService;
     private final ProductModel productModel;
     private final PromotionModel promotionModel;
     private final CartModel cartModel;
     private final PurchaseInputParser purchaseInputParser;
     private final ReceiptBuilder receiptBuilder;
 
-    public PurchaseService(ProcessView processView, ProductModel productModel, PromotionModel promotionModel,
+    public PurchaseService(ProcessView processView, ProductService productService, ProductModel productModel,
+                           PromotionModel promotionModel,
                            CartModel cartModel,
                            PurchaseInputParser purchaseInputParser, ReceiptBuilder receiptBuilder) {
         this.processView = processView;
+        this.productService = productService;
         this.productModel = productModel;
         this.promotionModel = promotionModel;
         this.cartModel = cartModel;
@@ -139,5 +142,11 @@ public class PurchaseService {
         CalculateResultDto resultInfo = cartModel.result();
         cartModel.clear();
         return receiptBuilder.issue(productInfo, promotionInfo, resultInfo);
+    }
+
+    public String getStoredProductInfo() {
+        StringBuilder sb = new StringBuilder();
+        productService.appendProductInfo(sb);
+        return sb.toString();
     }
 }

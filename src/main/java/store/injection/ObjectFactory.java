@@ -58,11 +58,11 @@ public class ObjectFactory {
     private final PromotionService promotionService = new PromotionService(promotionFileName, convenienceDataReader,
             promotionParser, promotionModel);
     private final SupplyService supplyService = new SupplyService(productService, promotionService);
-    private final PurchaseService purchaseService = new PurchaseService(processView, productModel, promotionModel,
-            cartModel,
-            purchaseInputParser, receiptBuilder);
+    private final PurchaseService purchaseService = new PurchaseService(processView, productService, productModel,
+            promotionModel,
+            cartModel, purchaseInputParser, receiptBuilder);
 
     // controller
-    public final SupplyController supplyController = new SupplyController(outputView, supplyService);
+    public final SupplyController supplyController = new SupplyController(supplyService);
     public final PurchaseController purchaseController = new PurchaseController(inputView, outputView, purchaseService);
 }

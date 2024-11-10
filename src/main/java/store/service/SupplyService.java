@@ -14,10 +14,4 @@ public class SupplyService {
         promotionService.supply();
         productService.supply();
     }
-
-    public String getStoredProductInfo() {
-        StringBuilder sb = new StringBuilder();
-        productService.appendProductInfo(sb);
-        return sb.toString();
-    }
 }

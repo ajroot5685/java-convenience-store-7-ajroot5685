@@ -2,6 +2,7 @@ package store.controller;
 
 import static store.constant.Message.PURCHASE_AGAIN_GUIDE;
 
+import store.constant.Message;
 import store.service.PurchaseService;
 import store.util.RetryHandler;
 import store.view.InputView;
@@ -31,6 +32,9 @@ public class PurchaseController {
     }
 
     private void process() {
+        outputView.print(Message.SHOW_STORED_PRODUCT);
+        outputView.print(purchaseService.getStoredProductInfo());
+
         inputView.printPurchaseGuide();
         String input = RetryHandler.retryUntilSuccess(inputView::getPurchaseInput);
         purchaseService.purchase(input);
