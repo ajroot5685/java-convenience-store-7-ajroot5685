@@ -63,6 +63,16 @@ public class PurchaseService {
                     additionalFreeCount.freeCount());
         }
 
+        if (normalCount == 0) {
+            return;
+        }
+        if (!normalCount.equals(purchaseDto.quantity())) {
+            processView.printNotApplyPromotion(product.getName(), normalCount);
+            String chooseInput = processView.getChooseInput();
+            if (chooseInput.equals("N")) {
+                return;
+            }
+        }
         purchaseProduct(purchaseDto.name(), product.getPrice(), normalCount, 0);
     }
 
