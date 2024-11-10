@@ -1,6 +1,7 @@
 package store.service;
 
 import static store.constant.ExceptionMessage.PRODUCT_NOT_FOUND;
+import static store.constant.ExceptionMessage.PRODUCT_QUANTITY_INSUFFICIENT;
 import static store.constant.ExceptionMessage.PROMOTION_NOT_FOUND;
 
 import camp.nextstep.edu.missionutils.DateTimes;
@@ -66,6 +67,9 @@ public class PurchaseService {
         if (normalCount == 0) {
             return;
         }
+        if (product.getQuantity() < normalCount) {
+            throw new IllegalArgumentException(PRODUCT_QUANTITY_INSUFFICIENT);
+        }
         if (!normalCount.equals(purchaseDto.quantity())) {
             processView.printNotApplyPromotion(product.getName(), normalCount);
             String chooseInput = processView.getChooseInput();
@@ -93,7 +97,8 @@ public class PurchaseService {
         if (isPromotionApplicable(product)) {
             Promotion promotion = promotionModel.findByName(product.getPromotion())
                     .orElseThrow(() -> new IllegalArgumentException(PROMOTION_NOT_FOUND));
-            return promotion.applicablePromotion(purchaseDto.quantity());
+            int min = Math.min(product.getPromotionQuantity(), purchaseDto.quantity());
+            return promotion.applicablePromotion(min);
         }
         return new PromotionDto(0, 0);
     }
@@ -123,7 +128,9 @@ public class PurchaseService {
         String input = processView.getChooseInput();
         if (input.equals("Y")) {
             cartModel.setMembership(true);
+            return;
         }
+        cartModel.setMembership(false);
     }
 
     public String getCalculateResult() {
