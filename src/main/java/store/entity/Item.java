@@ -6,21 +6,21 @@ import store.dto.CalculatePromotionDto;
 public class Item {
 
     private final String name;
-    private final Integer price;
-    private Long totalQuantity;
-    private Integer freeQuantity;
+    private final int price;
+    private long normalQuantity;
+    private long promotionQuantity;
+    private long freeQuantity;
 
-    public Item(String name, Integer price) {
+    public Item(String name, int price) {
         this.name = name;
         this.price = price;
-        this.totalQuantity = 0L;
-        this.freeQuantity = 0;
     }
 
-    private Item(String name, Integer price, Long totalQuantity, Integer freeQuantity) {
+    private Item(String name, int price, long normalQuantity, long promotionQuantity, long freeQuantity) {
         this.name = name;
         this.price = price;
-        this.totalQuantity = totalQuantity;
+        this.normalQuantity = normalQuantity;
+        this.promotionQuantity = promotionQuantity;
         this.freeQuantity = freeQuantity;
     }
 
@@ -28,44 +28,60 @@ public class Item {
         return name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public Long getTotalQuantity() {
-        return totalQuantity;
+    public long getNormalQuantity() {
+        return normalQuantity;
     }
 
-    public Integer getFreeQuantity() {
+    public long getPromotionQuantity() {
+        return promotionQuantity;
+    }
+
+    public long getFreeQuantity() {
         return freeQuantity;
     }
 
-    public Item clone() {
-        return new Item(this.name, this.price, this.totalQuantity, this.freeQuantity);
+    public long getTotalQuantity() {
+        return normalQuantity + promotionQuantity;
     }
 
-    public void increaseTotalQuantity(Integer totalQuantity) {
-        this.totalQuantity += totalQuantity;
+    public Item clone() {
+        return new Item(name, price, normalQuantity, promotionQuantity, freeQuantity);
+    }
+
+    public void increaseNormalQuantity(long normalQuantity) {
+        this.normalQuantity += normalQuantity;
+    }
+
+    public void increasePromotionQuantity(long promotionQuantity) {
+        this.promotionQuantity += promotionQuantity;
     }
 
     public void increaseFreeQuantity(Integer freeQuantity) {
         this.freeQuantity += freeQuantity;
     }
 
-    public Long calculateTotalPrice() {
-        return price * totalQuantity;
+    public long calculateTotalPrice() {
+        return price * getTotalQuantity();
     }
 
-    public Long calculateDiscountPrice() {
-        return (long) price * freeQuantity;
+    public long calculateDiscountPrice() {
+        return price * freeQuantity;
     }
 
-    public Long calculatePayAmount() {
-        return (long) price * (totalQuantity - freeQuantity);
+    public long calculatePayAmount() {
+        return price * (getTotalQuantity() - freeQuantity);
+    }
+
+    public long calculateNotApplyPromotionAmount() {
+        return price * normalQuantity;
     }
 
     public CalculateProductDto calculate() {
-        return new CalculateProductDto(name, totalQuantity, calculateTotalPrice());
+        return new CalculateProductDto(name, getTotalQuantity(), calculateTotalPrice());
     }
 
     public CalculatePromotionDto calculatePromotion() {

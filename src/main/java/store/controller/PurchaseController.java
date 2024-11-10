@@ -38,6 +38,7 @@ public class PurchaseController {
         String input = inputView.getInput();
         inputValidator.validatePurchaseInput(input);
         purchaseService.purchase(input);
+        purchaseService.memberShip();
         outputView.print(purchaseService.getCalculateResult());
     }
 

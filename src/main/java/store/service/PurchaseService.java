@@ -109,12 +109,21 @@ public class PurchaseService {
     }
 
     private void purchaseProduct(String name, Integer price, Integer quantity, Integer freeCount) {
-        cartModel.addQuantity(name, price, quantity, freeCount);
         if (freeCount == 0) {
             productModel.decreaseNormal(name, quantity);
+            cartModel.addNormalQuantity(name, price, quantity);
             return;
         }
         productModel.decreasePromotion(name, quantity);
+        cartModel.addPromotionQuantity(name, price, quantity, freeCount);
+    }
+
+    public void memberShip() {
+        processView.printMembershipApply();
+        String input = processView.getChooseInput();
+        if (input.equals("Y")) {
+            cartModel.setMembership(true);
+        }
     }
 
     public String getCalculateResult() {
