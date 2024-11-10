@@ -15,35 +15,19 @@ class CartModelTest {
     private final CartModel cartModel = new CartModel();
 
     @Test
-    void 일반_상품을_구매하여_구매한_수량을_증가시킨다() {
+    void 상품을_구매하여_구매한_수량과_증정_수량을_증가시킨다() {
         // given
         String name = "콜라";
         Integer price = 1000;
         Integer quantity = 10;
-        boolean isPromotion = false;
+        Integer freeQuantity = 3;
 
         // when
-        cartModel.addQuantity(name, price, quantity, isPromotion);
+        cartModel.addQuantity(name, price, quantity, freeQuantity);
 
         // then
         Map<String, Item> items = cartModel.getItems();
-        assertThat(items.get(name).getQuantity()).isEqualTo(quantity);
-    }
-
-    @Test
-    void 프로모션_상품을_구매하여_구매한_수량을_증가시킨다() {
-        // given
-        String name = "콜라";
-        Integer price = 1000;
-        Integer quantity = 10;
-        boolean isPromotion = true;
-
-        // when
-        cartModel.addQuantity(name, price, quantity, isPromotion);
-
-        // then
-        Map<String, Item> items = cartModel.getItems();
-        assertThat(items.get(name).getPromotionQuantity()).isEqualTo(quantity);
+        assertThat(items.get(name).getTotalQuantity()).isEqualTo((long) quantity);
     }
 
     @Test
@@ -52,8 +36,8 @@ class CartModelTest {
         String name = "콜라";
         Integer price = 1000;
         Integer quantity = 10;
-        boolean isPromotion = true;
-        cartModel.addQuantity(name, price, quantity, isPromotion);
+        Integer freeQuantity = 3;
+        cartModel.addQuantity(name, price, quantity, freeQuantity);
 
         // when
         cartModel.clear();
@@ -68,9 +52,8 @@ class CartModelTest {
         String name = "콜라";
         Integer price = 1000;
         Integer quantity = 10;
-        Integer promotionQuantity = 5;
-        cartModel.addQuantity(name, price, quantity, false);
-        cartModel.addQuantity(name, price, promotionQuantity, true);
+        Integer freeQuantity = 3;
+        cartModel.addQuantity(name, price, quantity, freeQuantity);
 
         // when
         List<CalculateProductDto> productDtos = cartModel.calculate();
@@ -78,17 +61,17 @@ class CartModelTest {
         CalculateResultDto result = cartModel.result();
 
         // then
-        Long expectTotalCount = (long) quantity + promotionQuantity;
-        Long expectTotalPrice = ((long) quantity + promotionQuantity) * price;
-        Long expectDiscountPrice = (long) promotionQuantity * price;
-        Long expectPayAmount = (long) quantity * price;
+        Long expectTotalCount = (long) quantity;
+        Long expectTotalPrice = (long) quantity * price;
+        Long expectDiscountPrice = (long) freeQuantity * price;
+        Long expectPayAmount = ((long) quantity - freeQuantity) * price;
 
         assertThat(productDtos.get(0).name()).isEqualTo(name);
         assertThat(productDtos.get(0).quantity()).isEqualTo(expectTotalCount);
         assertThat(productDtos.get(0).totalPrice()).isEqualTo(expectTotalPrice);
 
         assertThat(promotionDtos.get(0).name()).isEqualTo(name);
-        assertThat(promotionDtos.get(0).quantity()).isEqualTo(promotionQuantity);
+        assertThat(promotionDtos.get(0).quantity()).isEqualTo(freeQuantity);
 
         assertThat(result.totalCount()).isEqualTo(expectTotalCount);
         assertThat(result.totalPrice()).isEqualTo(expectTotalPrice);

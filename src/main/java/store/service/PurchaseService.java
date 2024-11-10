@@ -9,6 +9,7 @@ import store.builder.ReceiptBuilder;
 import store.dto.CalculateProductDto;
 import store.dto.CalculatePromotionDto;
 import store.dto.CalculateResultDto;
+import store.dto.PromotionDto;
 import store.dto.PurchaseDto;
 import store.entity.Product;
 import store.entity.Promotion;
@@ -44,20 +45,21 @@ public class PurchaseService {
     private void process(PurchaseDto purchaseDto) {
         Product product = productModel.findByName(purchaseDto.name())
                 .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
-        Integer promotionCount = applicablePromotionCount(product, purchaseDto);
-        Integer normalCount = purchaseDto.quantity() - promotionCount;
+        PromotionDto promotionDto = applicablePromotionCalculate(product, purchaseDto);
+        Integer normalCount = purchaseDto.quantity() - promotionDto.applicableCount();
 
-        purchaseProduct(purchaseDto.name(), product.getPrice(), promotionCount, true);
-        purchaseProduct(purchaseDto.name(), product.getPrice(), normalCount, false);
+        purchaseProduct(purchaseDto.name(), product.getPrice(), promotionDto.applicableCount(),
+                promotionDto.freeCount());
+        purchaseProduct(purchaseDto.name(), product.getPrice(), normalCount, 0);
     }
 
-    private Integer applicablePromotionCount(Product product, PurchaseDto purchaseDto) {
+    private PromotionDto applicablePromotionCalculate(Product product, PurchaseDto purchaseDto) {
         if (isPromotionApplicable(product)) {
             Promotion promotion = promotionModel.findByName(product.getPromotion())
                     .orElseThrow(() -> new IllegalArgumentException(PROMOTION_NOT_FOUND));
-            return promotion.applicableCount(purchaseDto.quantity());
+            return promotion.applicablePromotion(purchaseDto.quantity());
         }
-        return 0;
+        return new PromotionDto(0, 0);
     }
 
     // 상품에 프로모션 정보 있는지 확인, 오늘 적용가능한지 확인
@@ -70,9 +72,13 @@ public class PurchaseService {
         return promotion.checkDate(DateTimes.now().toLocalDate());
     }
 
-    private void purchaseProduct(String name, Integer price, Integer quantity, boolean isPromotion) {
-        productModel.decrease(name, quantity, isPromotion);
-        cartModel.addQuantity(name, price, quantity, isPromotion);
+    private void purchaseProduct(String name, Integer price, Integer quantity, Integer freeCount) {
+        cartModel.addQuantity(name, price, quantity, freeCount);
+        if (freeCount == 0) {
+            productModel.decreaseNormal(name, quantity);
+            return;
+        }
+        productModel.decreasePromotion(name, quantity);
     }
 
     public String getCalculateResult() {

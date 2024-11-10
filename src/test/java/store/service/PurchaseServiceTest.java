@@ -30,7 +30,7 @@ class PurchaseServiceTest {
     }
 
     @Test
-    void 상품_구매에_성공한다() {
+    void 프로모션이_적용된_상품_구매에_성공한다() {
         // given
         productService.supply();
         promotionService.supply();
@@ -42,8 +42,25 @@ class PurchaseServiceTest {
         // then
         assertThat(productModel.getProducts().get("콜라").getQuantity()).isEqualTo(9);
         assertThat(productModel.getProducts().get("콜라").getPromotionQuantity()).isEqualTo(1);
-        assertThat(cartModel.getItems().get("콜라").getQuantity()).isEqualTo(1);
-        assertThat(cartModel.getItems().get("콜라").getPromotionQuantity()).isEqualTo(9);
+        assertThat(cartModel.getItems().get("콜라").getTotalQuantity()).isEqualTo(10);
+        assertThat(cartModel.getItems().get("콜라").getFreeQuantity()).isEqualTo(3);
+    }
+
+    @Test
+    void 프로모션이_적용되지_않은_상품_구매에_성공한다() {
+        // given
+        productService.supply();
+        promotionService.supply();
+        String purchaseInput = "[비타민워터-4]";
+
+        // when
+        purchaseService.purchase(purchaseInput);
+
+        // then
+        assertThat(productModel.getProducts().get("비타민워터").getQuantity()).isEqualTo(2);
+        assertThat(productModel.getProducts().get("비타민워터").getPromotionQuantity()).isEqualTo(0);
+        assertThat(cartModel.getItems().get("비타민워터").getTotalQuantity()).isEqualTo(4);
+        assertThat(cartModel.getItems().get("비타민워터").getFreeQuantity()).isEqualTo(0);
     }
 
     @Test

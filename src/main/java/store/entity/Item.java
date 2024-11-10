@@ -7,21 +7,21 @@ public class Item {
 
     private final String name;
     private final Integer price;
-    private Integer promotionQuantity;
-    private Integer quantity;
+    private Long totalQuantity;
+    private Integer freeQuantity;
 
     public Item(String name, Integer price) {
         this.name = name;
         this.price = price;
-        this.promotionQuantity = 0;
-        this.quantity = 0;
+        this.totalQuantity = 0L;
+        this.freeQuantity = 0;
     }
 
-    private Item(String name, Integer price, Integer promotionQuantity, Integer quantity) {
+    private Item(String name, Integer price, Long totalQuantity, Integer freeQuantity) {
         this.name = name;
         this.price = price;
-        this.promotionQuantity = promotionQuantity;
-        this.quantity = quantity;
+        this.totalQuantity = totalQuantity;
+        this.freeQuantity = freeQuantity;
     }
 
     public String getName() {
@@ -32,47 +32,43 @@ public class Item {
         return price;
     }
 
-    public Integer getPromotionQuantity() {
-        return promotionQuantity;
+    public Long getTotalQuantity() {
+        return totalQuantity;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Integer getFreeQuantity() {
+        return freeQuantity;
     }
 
     public Item clone() {
-        return new Item(this.name, this.price, this.promotionQuantity, this.quantity);
+        return new Item(this.name, this.price, this.totalQuantity, this.freeQuantity);
     }
 
-    public void increaseQuantity(Integer quantity) {
-        this.quantity += quantity;
+    public void increaseTotalQuantity(Integer totalQuantity) {
+        this.totalQuantity += totalQuantity;
     }
 
-    public void increasePromotionQuantity(Integer quantity) {
-        this.promotionQuantity += quantity;
-    }
-
-    public Long calculateTotalCount() {
-        return (long) quantity + promotionQuantity;
+    public void increaseFreeQuantity(Integer freeQuantity) {
+        this.freeQuantity += freeQuantity;
     }
 
     public Long calculateTotalPrice() {
-        return price * calculateTotalCount();
+        return price * totalQuantity;
     }
 
     public Long calculateDiscountPrice() {
-        return (long) price * promotionQuantity;
+        return (long) price * freeQuantity;
     }
 
     public Long calculatePayAmount() {
-        return (long) price * quantity;
+        return (long) price * (totalQuantity - freeQuantity);
     }
 
     public CalculateProductDto calculate() {
-        return new CalculateProductDto(name, calculateTotalCount(), calculateTotalPrice());
+        return new CalculateProductDto(name, totalQuantity, calculateTotalPrice());
     }
 
     public CalculatePromotionDto calculatePromotion() {
-        return new CalculatePromotionDto(name, promotionQuantity);
+        return new CalculatePromotionDto(name, freeQuantity);
     }
 }

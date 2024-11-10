@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import store.dto.PromotionDto;
 
 class PromotionTest {
 
@@ -57,16 +58,17 @@ class PromotionTest {
     }
 
     @Test
-    void 적용_가능한_프로모션_상품_개수를_반환한다() {
+    void 적용_가능한_프로모션_정보를_반환한다() {
         // given
         Promotion promotion = new Promotion("탄산2+1", 2, 1, LocalDate.parse("2024-01-01"),
                 LocalDate.parse("2024-12-31"));
         Integer quantity = 10;
 
         // when
-        Integer applicableCount = promotion.applicableCount(quantity);
+        PromotionDto promotionDto = promotion.applicablePromotion(quantity);
 
         // then
-        assertThat(applicableCount).isEqualTo(9);
+        assertThat(promotionDto.applicableCount()).isEqualTo(9);
+        assertThat(promotionDto.freeCount()).isEqualTo(3);
     }
 }

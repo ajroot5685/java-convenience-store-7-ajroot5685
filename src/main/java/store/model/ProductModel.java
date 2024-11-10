@@ -45,11 +45,11 @@ public class ProductModel {
         return Optional.ofNullable(products.get(name));
     }
 
-    public void decrease(String name, Integer quantity, boolean isPromotion) {
-        if (isPromotion) {
-            products.get(name).decreasePromotionQuantity(quantity);
-            return;
-        }
+    public void decreaseNormal(String name, Integer quantity) {
         products.get(name).decreaseQuantity(quantity);
+    }
+
+    public void decreasePromotion(String name, Integer quantity) {
+        products.get(name).decreasePromotionQuantity(quantity);
     }
 }

@@ -88,7 +88,7 @@ class ProductModelTest {
         Integer quantity = 2;
 
         // when
-        productModel.decrease(name, quantity, false);
+        productModel.decreaseNormal(name, quantity);
 
         // then
         Product product = productModel.getProducts().get(name);
@@ -103,7 +103,7 @@ class ProductModelTest {
         Integer quantity = 2;
 
         // when
-        productModel.decrease(name, quantity, true);
+        productModel.decreasePromotion(name, quantity);
 
         // then
         Product product = productModel.getProducts().get(name);

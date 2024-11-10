@@ -1,6 +1,7 @@
 package store.entity;
 
 import java.time.LocalDate;
+import store.dto.PromotionDto;
 
 public class Promotion {
 
@@ -35,7 +36,10 @@ public class Promotion {
                 (now.isEqual(endDate) || now.isBefore(endDate));
     }
 
-    public Integer applicableCount(Integer quantity) {
-        return quantity - quantity % (buy + get);
+    public PromotionDto applicablePromotion(Integer quantity) {
+        int unit = buy + get;
+        int applicableCount = quantity - quantity % unit;
+        int freeCount = (quantity / unit) * get;
+        return new PromotionDto(applicableCount, freeCount);
     }
 }

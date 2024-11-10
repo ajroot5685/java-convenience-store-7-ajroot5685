@@ -21,13 +21,10 @@ public class CartModel {
         return defensiveMap;
     }
 
-    public void addQuantity(String name, Integer price, Integer quantity, boolean isPromotion) {
+    public void addQuantity(String name, Integer price, Integer quantity, Integer freeQuantity) {
         createItem(name, price);
-        if (isPromotion) {
-            items.get(name).increasePromotionQuantity(quantity);
-            return;
-        }
-        items.get(name).increaseQuantity(quantity);
+        items.get(name).increaseTotalQuantity(quantity);
+        items.get(name).increaseFreeQuantity(freeQuantity);
     }
 
     private void createItem(String name, Integer price) {
@@ -48,7 +45,7 @@ public class CartModel {
 
     public List<CalculatePromotionDto> calculatePromotion() {
         return items.values().stream()
-                .filter(item -> item.getPromotionQuantity() != 0)
+                .filter(item -> item.getFreeQuantity() != 0)
                 .map(Item::calculatePromotion)
                 .toList();
     }
@@ -65,7 +62,7 @@ public class CartModel {
 
     private Long totalCount() {
         return items.values().stream()
-                .mapToLong(Item::calculateTotalCount)
+                .mapToLong(Item::getTotalQuantity)
                 .sum();
     }
 
@@ -77,7 +74,7 @@ public class CartModel {
 
     private Long promotionDiscount() {
         return items.values().stream()
-                .filter(item -> item.getPromotionQuantity() > 0)
+                .filter(item -> item.getFreeQuantity() != 0)
                 .mapToLong(item -> -item.calculateDiscountPrice())
                 .sum();
     }
