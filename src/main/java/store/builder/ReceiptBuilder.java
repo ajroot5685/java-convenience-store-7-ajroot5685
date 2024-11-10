@@ -7,11 +7,12 @@ import store.dto.CalculateResultDto;
 
 public class ReceiptBuilder {
 
-    private final String HEADER_FORMAT = "%-6s\t\t\t%-5s\t%s\n";
-    private final String PRODUCT_FORMAT = "%-6s\t\t\t%-5d\t%-,5d\n";
-    private final String PROMOTION_FORMAT = "%-6s\t\t\t%-5d\n";
-    private final String TOTAL_COUNT_FORMAT = "%-6s\t\t\t%-5d\t%,5d\n";
-    private final String RESULT_FORMAT = "%-6s\t\t\t\t\t%,5d\n";
+    private final String HEADER_FORMAT = "%-10s\t\t%-5s\t%5s\n";
+    private final String PRODUCT_FORMAT = "%-10s\t\t%-5d\t%-,5d\n";
+    private final String PROMOTION_FORMAT = "%-10s\t\t%-5d\n";
+    private final String TOTAL_COUNT_FORMAT = "%-10s\t\t%-5d\t%-,5d\n";
+    private final String DISCOUNT_RESULT_FORMAT = "%-10s\t\t     \t-%-,5d\n";
+    private final String PAY_AMOUNT_FORMAT = "%-10s\t\t\t     %-,5d\n";
 
     public String issue(List<CalculateProductDto> calculateProductDto,
                         List<CalculatePromotionDto> calculatePromotionDto,
@@ -47,8 +48,8 @@ public class ReceiptBuilder {
         sb.append("====================================\n");
         sb.append(String.format(TOTAL_COUNT_FORMAT, "총구매액", calculateResultDto.totalCount(),
                 calculateResultDto.totalPrice()));
-        sb.append(String.format(RESULT_FORMAT, "행사할인", calculateResultDto.promotionDiscount()));
-        sb.append(String.format(RESULT_FORMAT, "멤버십할인", calculateResultDto.membershipDiscount()));
-        sb.append(String.format(RESULT_FORMAT, "내실돈", calculateResultDto.payAmount()));
+        sb.append(String.format(DISCOUNT_RESULT_FORMAT, "행사할인", calculateResultDto.promotionDiscount()));
+        sb.append(String.format(DISCOUNT_RESULT_FORMAT, "멤버십할인", calculateResultDto.membershipDiscount()));
+        sb.append(String.format(PAY_AMOUNT_FORMAT, "내실돈", calculateResultDto.payAmount()));
     }
 }

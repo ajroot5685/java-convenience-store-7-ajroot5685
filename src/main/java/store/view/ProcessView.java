@@ -16,6 +16,7 @@ public class ProcessView {
         if (!input.matches(CHOOSE_REGEX)) {
             throw new IllegalArgumentException(WRONG_INPUT);
         }
+        System.out.println();
         return input;
     }
 

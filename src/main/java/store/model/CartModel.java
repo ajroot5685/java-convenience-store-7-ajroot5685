@@ -85,7 +85,7 @@ public class CartModel {
     private long promotionDiscount() {
         return items.values().stream()
                 .filter(item -> item.getFreeQuantity() != 0)
-                .mapToLong(item -> -item.calculateDiscountPrice())
+                .mapToLong(Item::calculateDiscountPrice)
                 .sum();
     }
 
@@ -97,13 +97,13 @@ public class CartModel {
                 .mapToLong(Item::calculateNotApplyPromotionAmount)
                 .sum();
         long discount = payAmountBeforeMembershipDiscount * 3 / 10;
-        return -Math.min(8000, discount);
+        return Math.min(8000, discount);
     }
 
     private long payAmount() {
         long payAmountBeforeMembershipDiscount = items.values().stream()
                 .mapToLong(Item::calculatePayAmount)
                 .sum();
-        return payAmountBeforeMembershipDiscount + membershipDiscount();
+        return payAmountBeforeMembershipDiscount - membershipDiscount();
     }
 }
