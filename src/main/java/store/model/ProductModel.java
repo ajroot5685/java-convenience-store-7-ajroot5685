@@ -52,4 +52,8 @@ public class ProductModel {
     public void decreasePromotion(String name, Integer quantity) {
         products.get(name).decreasePromotionQuantity(quantity);
     }
+
+    public boolean isStockAvailable(String name, int quantity) {
+        return products.get(name).hasSufficientStock(quantity);
+    }
 }

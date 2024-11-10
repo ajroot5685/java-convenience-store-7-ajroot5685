@@ -1,5 +1,6 @@
 package store.controller;
 
+import static store.constant.ExceptionMessage.PRODUCT_QUANTITY_INSUFFICIENT;
 import static store.constant.Message.PURCHASE_AGAIN_GUIDE;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class PurchaseController {
     private void process() {
         showProductInfo();
 
-        List<PurchaseDto> purchaseDtos = buildPurchaseDtoList();
+        List<PurchaseDto> purchaseDtos = RetryHandler.retryUntilSuccess(this::buildPurchaseDtoList);
         for (PurchaseDto purchaseDto : purchaseDtos) {
             purchaseProduct(purchaseDto);
         }
@@ -60,8 +61,6 @@ public class PurchaseController {
     }
 
     private void purchaseProduct(PurchaseDto purchaseDto) {
-        // 구매 가능한지 확인
-
         // 프로모션 상품이 노출되어 있는지 확인
         boolean applicablePromotion = purchaseService.isApplicablePromotion(purchaseDto.name());
         int remainCount2 = purchaseDto.quantity();
@@ -90,6 +89,10 @@ public class PurchaseController {
 
     private List<PurchaseDto> buildPurchaseDtoList() {
         inputView.printPurchaseGuide();
-        return RetryHandler.retryUntilSuccess(inputView::getPurchaseInput);
+        List<PurchaseDto> purchaseDtos = RetryHandler.retryUntilSuccess(inputView::getPurchaseInput);
+        if (!purchaseService.isStockAvailable(purchaseDtos)) {
+            throw new IllegalArgumentException(PRODUCT_QUANTITY_INSUFFICIENT);
+        }
+        return purchaseDtos;
     }
 }

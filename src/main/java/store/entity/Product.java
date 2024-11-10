@@ -63,4 +63,11 @@ public class Product {
     public void decreasePromotionQuantity(Integer quantity) {
         this.promotionQuantity -= quantity;
     }
+
+    public boolean hasSufficientStock(int quantity) {
+        if (promotion == null) {
+            return this.quantity >= quantity;
+        }
+        return (this.promotionQuantity + this.quantity) >= quantity;
+    }
 }

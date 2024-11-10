@@ -4,6 +4,7 @@ import static store.constant.ExceptionMessage.PRODUCT_NOT_FOUND;
 import static store.constant.ExceptionMessage.PROMOTION_NOT_FOUND;
 
 import camp.nextstep.edu.missionutils.DateTimes;
+import java.util.List;
 import java.util.function.BiFunction;
 import store.dto.PromotionDto;
 import store.dto.PurchaseDto;
@@ -26,6 +27,11 @@ public class PurchaseService {
         this.productModel = productModel;
         this.promotionModel = promotionModel;
         this.cartModel = cartModel;
+    }
+
+    public boolean isStockAvailable(List<PurchaseDto> purchaseDtos) {
+        return purchaseDtos.stream()
+                .allMatch(purchaseDto -> productModel.isStockAvailable(purchaseDto.name(), purchaseDto.quantity()));
     }
 
     public boolean isApplicablePromotion(String productName) {
