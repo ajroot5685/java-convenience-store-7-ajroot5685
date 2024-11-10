@@ -6,9 +6,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import store.dto.PurchaseDto;
 
-class PurchaseInputParserTest {
+class InputParserTest {
 
-    private PurchaseInputParser purchaseInputParser = new PurchaseInputParser();
+    private InputParser inputParser = new InputParser();
 
     @Test
     void 입력을_PurchaseDto_리스트로_변환한다() {
@@ -16,7 +16,7 @@ class PurchaseInputParserTest {
         String purchaseInput = "[콜라-10],[사이다-3]";
 
         // when
-        List<PurchaseDto> purchaseDtos = purchaseInputParser.toPurchaseDtoList(purchaseInput);
+        List<PurchaseDto> purchaseDtos = inputParser.toPurchaseDtoList(purchaseInput);
 
         // then
         assertThat(purchaseDtos.get(0).name()).isEqualTo("콜라");

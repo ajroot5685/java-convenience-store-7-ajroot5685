@@ -10,10 +10,10 @@ import store.file.ConvenienceDataReader;
 import store.model.CartModel;
 import store.model.ProductModel;
 import store.model.PromotionModel;
+import store.parse.InputParser;
 import store.parse.Parser;
 import store.parse.ProductDtoParser;
 import store.parse.PromotionParser;
-import store.parse.PurchaseInputParser;
 import store.service.ProductService;
 import store.service.PromotionService;
 import store.service.PurchaseService;
@@ -36,7 +36,7 @@ public class TestObjectFactory {
     // parser
     private Parser<ProductDto> productParser = new ProductDtoParser();
     private Parser<Promotion> promotionParser = new PromotionParser();
-    private PurchaseInputParser purchaseInputParser = new PurchaseInputParser();
+    private InputParser inputParser = new InputParser();
 
     // builder
     private ProductOutputBuilder productOutputBuilder = new ProductOutputBuilder();
@@ -59,7 +59,7 @@ public class TestObjectFactory {
             promotionParser, promotionModel);
     public SupplyService supplyService = new SupplyService(productService, promotionService);
     public PurchaseService purchaseService = new PurchaseService(processView, productModel, promotionModel, cartModel,
-            purchaseInputParser, receiptBuilder);
+            inputParser, receiptBuilder);
 
     // controller
     public SupplyController supplyController = new SupplyController(outputView, supplyService);

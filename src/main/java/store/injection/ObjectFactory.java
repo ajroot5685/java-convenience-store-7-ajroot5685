@@ -10,10 +10,10 @@ import store.file.ConvenienceDataReader;
 import store.model.CartModel;
 import store.model.ProductModel;
 import store.model.PromotionModel;
+import store.parse.InputParser;
 import store.parse.Parser;
 import store.parse.ProductDtoParser;
 import store.parse.PromotionParser;
-import store.parse.PurchaseInputParser;
 import store.service.ProductService;
 import store.service.PromotionService;
 import store.service.PurchaseService;
@@ -21,7 +21,6 @@ import store.service.SupplyService;
 import store.validate.InputValidator;
 import store.view.InputView;
 import store.view.OutputView;
-import store.view.ProcessView;
 
 public class ObjectFactory {
 
@@ -36,16 +35,15 @@ public class ObjectFactory {
     // parser
     private final Parser<ProductDto> productParser = new ProductDtoParser();
     private final Parser<Promotion> promotionParser = new PromotionParser();
-    private final PurchaseInputParser purchaseInputParser = new PurchaseInputParser();
+    private final InputParser inputParser = new InputParser();
 
     // builder
     private final ProductOutputBuilder productOutputBuilder = new ProductOutputBuilder();
     private final ReceiptBuilder receiptBuilder = new ReceiptBuilder();
 
     // view
-    private final InputView inputView = new InputView(inputValidator);
+    private final InputView inputView = new InputView(inputValidator, inputParser);
     private final OutputView outputView = new OutputView();
-    private final ProcessView processView = new ProcessView();
 
     // model
     private final ProductModel productModel = new ProductModel();
@@ -58,9 +56,8 @@ public class ObjectFactory {
     private final PromotionService promotionService = new PromotionService(promotionFileName, convenienceDataReader,
             promotionParser, promotionModel);
     private final SupplyService supplyService = new SupplyService(productService, promotionService);
-    private final PurchaseService purchaseService = new PurchaseService(processView, productService, productModel,
-            promotionModel,
-            cartModel, purchaseInputParser, receiptBuilder);
+    private final PurchaseService purchaseService = new PurchaseService(productService, productModel,
+            promotionModel, cartModel, receiptBuilder);
 
     // controller
     public final SupplyController supplyController = new SupplyController(supplyService);

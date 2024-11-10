@@ -31,13 +31,17 @@ public class Promotion {
         return get;
     }
 
+    public Integer getPromotionUnit() {
+        return buy + get;
+    }
+
     public boolean checkDate(LocalDate now) {
         return (now.isEqual(startDate) || now.isAfter(startDate)) &&
                 (now.isEqual(endDate) || now.isBefore(endDate));
     }
 
     public PromotionDto applicablePromotion(Integer quantity) {
-        int unit = buy + get;
+        int unit = getPromotionUnit();
         int applicableCount = quantity - quantity % unit;
         int freeCount = (quantity / unit) * get;
         return new PromotionDto(applicableCount, freeCount);

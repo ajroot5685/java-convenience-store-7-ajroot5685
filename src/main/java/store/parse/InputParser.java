@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import store.dto.PurchaseDto;
 
-public class PurchaseInputParser {
+public class InputParser {
 
     private final String SEPARATOR = ",";
     private final String HYPHEN = "-";
