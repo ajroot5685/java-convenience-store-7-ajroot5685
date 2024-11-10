@@ -53,7 +53,7 @@ public class ObjectFactory {
 
     // service
     private final ProductService productService = new ProductService(productFileName, convenienceDataReader,
-            productParser, productOutputBuilder, productModel);
+            productParser, productOutputBuilder, productModel, promotionModel);
     private final PromotionService promotionService = new PromotionService(promotionFileName, convenienceDataReader,
             promotionParser, promotionModel);
     private final SupplyService supplyService = new SupplyService(productService, promotionService);
