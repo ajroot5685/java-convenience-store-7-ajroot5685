@@ -23,7 +23,7 @@ class CartModelTest {
         Integer freeQuantity = 3;
 
         // when
-        cartModel.addQuantity(name, price, quantity, freeQuantity);
+        cartModel.addPromotionQuantity(name, price, quantity, freeQuantity);
 
         // then
         Map<String, Item> items = cartModel.getItems();
@@ -37,7 +37,7 @@ class CartModelTest {
         Integer price = 1000;
         Integer quantity = 10;
         Integer freeQuantity = 3;
-        cartModel.addQuantity(name, price, quantity, freeQuantity);
+        cartModel.addPromotionQuantity(name, price, quantity, freeQuantity);
 
         // when
         cartModel.clear();
@@ -53,7 +53,7 @@ class CartModelTest {
         Integer price = 1000;
         Integer quantity = 10;
         Integer freeQuantity = 3;
-        cartModel.addQuantity(name, price, quantity, freeQuantity);
+        cartModel.addPromotionQuantity(name, price, quantity, freeQuantity);
 
         // when
         List<CalculateProductDto> productDtos = cartModel.calculate();
@@ -71,11 +71,11 @@ class CartModelTest {
         assertThat(productDtos.get(0).totalPrice()).isEqualTo(expectTotalPrice);
 
         assertThat(promotionDtos.get(0).name()).isEqualTo(name);
-        assertThat(promotionDtos.get(0).quantity()).isEqualTo(freeQuantity);
+        assertThat(promotionDtos.get(0).quantity()).isEqualTo((long) freeQuantity);
 
         assertThat(result.totalCount()).isEqualTo(expectTotalCount);
         assertThat(result.totalPrice()).isEqualTo(expectTotalPrice);
-        assertThat(result.promotionDiscount()).isEqualTo(-expectDiscountPrice);
+        assertThat(result.promotionDiscount()).isEqualTo(expectDiscountPrice);
         // TODO - 멤버쉽 할인 적용
         assertThat(result.membershipDiscount()).isEqualTo(0);
         assertThat(result.payAmount()).isEqualTo(expectPayAmount);

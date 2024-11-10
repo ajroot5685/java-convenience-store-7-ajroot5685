@@ -2,6 +2,7 @@ package store.validate;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static store.constant.ExceptionMessage.INPUT_FORMAT_ERROR;
 import static store.constant.ExceptionMessage.WRONG_INPUT;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -92,6 +93,6 @@ class InputValidatorTest {
         assertThatThrownBy(() -> inputValidator.validateChooseInput(input))
                 .isInstanceOf(IllegalArgumentException.class)
                 .extracting(Throwable::getMessage)
-                .isEqualTo(WRONG_INPUT);
+                .isEqualTo(INPUT_FORMAT_ERROR + WRONG_INPUT);
     }
 }

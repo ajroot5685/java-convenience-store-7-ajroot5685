@@ -12,6 +12,7 @@ import store.model.ProductModel;
 class ProductServiceTest {
 
     private ProductService productService;
+    private PromotionService promotionService;
 
     private ProductModel productModel;
 
@@ -21,11 +22,13 @@ class ProductServiceTest {
 
         productModel = testObjectFactory.productModel;
         productService = testObjectFactory.productService;
+        promotionService = testObjectFactory.promotionService;
     }
 
     @Test
     void 상품_정보를_불러와_저장한다() {
         // given
+        promotionService.supply();
 
         // when
         productService.supply();
@@ -38,6 +41,7 @@ class ProductServiceTest {
     @Test
     void 저장된_상품_정보를_StringBuilder_에_추가한다() {
         // given
+        promotionService.supply();
         productService.supply();
         StringBuilder sb = new StringBuilder();
 

@@ -60,7 +60,7 @@ public class Item {
         this.promotionQuantity += promotionQuantity;
     }
 
-    public void increaseFreeQuantity(Integer freeQuantity) {
+    public void increaseFreeQuantity(long freeQuantity) {
         this.freeQuantity += freeQuantity;
     }
 

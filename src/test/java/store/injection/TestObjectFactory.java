@@ -14,6 +14,7 @@ import store.parse.InputParser;
 import store.parse.Parser;
 import store.parse.ProductDtoParser;
 import store.parse.PromotionParser;
+import store.service.CalculateService;
 import store.service.ProductService;
 import store.service.PromotionService;
 import store.service.PurchaseService;
@@ -21,7 +22,6 @@ import store.service.SupplyService;
 import store.validate.InputValidator;
 import store.view.InputView;
 import store.view.OutputView;
-import store.view.ProcessView;
 
 public class TestObjectFactory {
 
@@ -43,9 +43,8 @@ public class TestObjectFactory {
     private ReceiptBuilder receiptBuilder = new ReceiptBuilder();
 
     // view
-    private InputView inputView = new InputView();
+    private InputView inputView = new InputView(inputValidator, inputParser);
     private OutputView outputView = new OutputView();
-    private ProcessView processView = new ProcessView();
 
     // model
     public ProductModel productModel = new ProductModel();
@@ -54,15 +53,16 @@ public class TestObjectFactory {
 
     // service
     public ProductService productService = new ProductService(productFileName, convenienceDataReader,
-            productParser, productOutputBuilder, productModel);
+            productParser, productOutputBuilder, productModel, promotionModel);
     public PromotionService promotionService = new PromotionService(promotionFileName, convenienceDataReader,
             promotionParser, promotionModel);
     public SupplyService supplyService = new SupplyService(productService, promotionService);
-    public PurchaseService purchaseService = new PurchaseService(processView, productModel, promotionModel, cartModel,
-            inputParser, receiptBuilder);
+    public PurchaseService purchaseService = new PurchaseService(productService, productModel,
+            promotionModel, cartModel);
+    public CalculateService calculateService = new CalculateService(receiptBuilder, cartModel);
 
     // controller
-    public SupplyController supplyController = new SupplyController(outputView, supplyService);
-    public PurchaseController purchaseController = new PurchaseController(inputView, outputView, inputValidator,
-            purchaseService);
+    public SupplyController supplyController = new SupplyController(supplyService);
+    public PurchaseController purchaseController = new PurchaseController(inputView, outputView, purchaseService,
+            calculateService);
 }
