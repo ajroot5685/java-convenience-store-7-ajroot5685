@@ -17,6 +17,13 @@ public class Item {
         this.quantity = 0;
     }
 
+    private Item(String name, Integer price, Integer promotionQuantity, Integer quantity) {
+        this.name = name;
+        this.price = price;
+        this.promotionQuantity = promotionQuantity;
+        this.quantity = quantity;
+    }
+
     public String getName() {
         return name;
     }
@@ -34,7 +41,7 @@ public class Item {
     }
 
     public Item clone() {
-        return new Item(this.name, this.price);
+        return new Item(this.name, this.price, this.promotionQuantity, this.quantity);
     }
 
     public void increaseQuantity(Integer quantity) {

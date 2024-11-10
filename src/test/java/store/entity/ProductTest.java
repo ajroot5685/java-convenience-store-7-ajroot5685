@@ -72,4 +72,21 @@ class ProductTest {
         // then
         assertThat(product.getQuantity()).isEqualTo(8);
     }
+
+    @Test
+    void 프로모션_수량을_감소시킨다() {
+        // given
+        String name = "콜라";
+        Integer price = 1000;
+        Product product = Product.create(name, price);
+        product.setPromotionQuantity(10);
+
+        Integer buyQuantity = 2;
+
+        // when
+        product.decreasePromotionQuantity(buyQuantity);
+
+        // then
+        assertThat(product.getPromotionQuantity()).isEqualTo(8);
+    }
 }

@@ -5,13 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import store.builder.ProductOutputBuilder;
 import store.entity.Promotion;
-import store.file.ConvenienceDataReader;
-import store.model.ProductModel;
+import store.injection.TestObjectFactory;
 import store.model.PromotionModel;
-import store.parse.ProductDtoParser;
-import store.parse.PromotionParser;
 
 class SupplyServiceTest {
 
@@ -21,16 +17,10 @@ class SupplyServiceTest {
 
     @BeforeEach
     void init() {
-        ConvenienceDataReader convenienceDataReader = new ConvenienceDataReader();
-        promotionModel = new PromotionModel();
+        TestObjectFactory testObjectFactory = new TestObjectFactory();
 
-        PromotionService promotionService = new PromotionService("promotions.md", convenienceDataReader,
-                new PromotionParser(),
-                promotionModel);
-        ProductService productService = new ProductService("products.md", convenienceDataReader, new ProductDtoParser(),
-                new ProductOutputBuilder(), new ProductModel());
-
-        supplyService = new SupplyService(productService, promotionService);
+        promotionModel = testObjectFactory.promotionModel;
+        supplyService = testObjectFactory.supplyService;
     }
 
     @Test

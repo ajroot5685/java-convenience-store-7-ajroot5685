@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import store.entity.Promotion;
 
@@ -49,5 +50,21 @@ class PromotionModelTest {
         // then
         Map<String, Promotion> newDefensiveData = promotionModel.getPromotions();
         assertThat(newDefensiveData.get("악의적 추가")).isNull();
+    }
+
+    @Test
+    void 조회할_때_상품이_없어도_에러가_나지_않는다() {
+        // given
+        List<Promotion> promotions = new ArrayList<>();
+        promotions.add(new Promotion("프로모션1", 2, 1, LocalDate.parse("2024-11-07"),
+                DateTimes.now().toLocalDate()));
+        promotionModel.init(promotions);
+        String name = "없는상품";
+
+        // when
+        Optional<Promotion> promotionOptional = promotionModel.findByName(name);
+
+        // then
+        assertThat(promotionOptional.isEmpty()).isTrue();
     }
 }

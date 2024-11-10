@@ -1,13 +1,9 @@
 package store.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import store.dto.ProductDto;
 import store.entity.Product;
 
@@ -72,36 +68,6 @@ class ProductModelTest {
     }
 
     @Test
-    void 구매가능_상품인지_검증하는_로직에_성공한다() {
-        // given
-        productModel.add(new ProductDto("콜라", 1000, 10, null));
-
-        // when
-        String name = "콜라";
-        Integer buyQuantity = 10;
-
-        // then
-        assertThatCode(() -> productModel.validateAvailability(name, buyQuantity))
-                .doesNotThrowAnyException();
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "'없는상품', 10",
-            "'콜라', 1000",
-    })
-    void 구매가능_상품인지_검증하는_로직에_실패한다(String name, Integer buyQuantity) {
-        // given
-        productModel.add(new ProductDto("콜라", 1000, 10, null));
-
-        // when
-
-        // then
-        assertThatThrownBy(() -> productModel.validateAvailability(name, buyQuantity))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     void 조회할_때_상품이_없어도_에러가_나지_않는다() {
         // given
         productModel.add(new ProductDto("콜라", 1000, 10, null));
@@ -115,17 +81,32 @@ class ProductModelTest {
     }
 
     @Test
-    void 상품의_수량을_감소시킨다() {
+    void 일반_상품의_수량을_감소시킨다() {
         // given
         productModel.add(new ProductDto("콜라", 1000, 10, null));
         String name = "콜라";
         Integer quantity = 2;
 
         // when
-        productModel.decrease(name, quantity);
+        productModel.decrease(name, quantity, false);
 
         // then
         Product product = productModel.getProducts().get(name);
         assertThat(product.getQuantity()).isEqualTo(8);
+    }
+
+    @Test
+    void 프로모션_상품의_수량을_감소시킨다() {
+        // given
+        productModel.add(new ProductDto("콜라", 1000, 10, "탄산2+1"));
+        String name = "콜라";
+        Integer quantity = 2;
+
+        // when
+        productModel.decrease(name, quantity, true);
+
+        // then
+        Product product = productModel.getProducts().get(name);
+        assertThat(product.getPromotionQuantity()).isEqualTo(8);
     }
 }

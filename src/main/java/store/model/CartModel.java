@@ -65,7 +65,7 @@ public class CartModel {
 
     private Long totalCount() {
         return items.values().stream()
-                .mapToLong(Item::getQuantity)
+                .mapToLong(Item::calculateTotalCount)
                 .sum();
     }
 

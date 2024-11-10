@@ -6,10 +6,8 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.entity.Promotion;
-import store.file.ConvenienceDataReader;
+import store.injection.TestObjectFactory;
 import store.model.PromotionModel;
-import store.parse.Parser;
-import store.parse.PromotionParser;
 
 class PromotionServiceTest {
 
@@ -19,12 +17,10 @@ class PromotionServiceTest {
 
     @BeforeEach
     void init() {
-        String fileName = "promotions.md";
-        ConvenienceDataReader convenienceDataReader = new ConvenienceDataReader();
-        Parser<Promotion> promotionParser = new PromotionParser();
-        promotionModel = new PromotionModel();
+        TestObjectFactory testObjectFactory = new TestObjectFactory();
 
-        promotionService = new PromotionService(fileName, convenienceDataReader, promotionParser, promotionModel);
+        promotionModel = testObjectFactory.promotionModel;
+        promotionService = testObjectFactory.promotionService;
     }
 
     @Test

@@ -5,18 +5,14 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import store.builder.ProductOutputBuilder;
-import store.builder.ReceiptBuilder;
-import store.file.ConvenienceDataReader;
+import store.injection.TestObjectFactory;
 import store.model.CartModel;
 import store.model.ProductModel;
-import store.model.PromotionModel;
-import store.parse.ProductDtoParser;
-import store.parse.PurchaseInputParser;
 
 class PurchaseServiceTest {
 
     private ProductService productService;
+    private PromotionService promotionService;
     private PurchaseService purchaseService;
 
     private ProductModel productModel;
@@ -24,34 +20,37 @@ class PurchaseServiceTest {
 
     @BeforeEach
     void init() {
-        productModel = new ProductModel();
-        cartModel = new CartModel();
-        PromotionModel promotionModel = new PromotionModel();
-        productService = new ProductService("products.md", new ConvenienceDataReader(),
-                new ProductDtoParser(), new ProductOutputBuilder(), productModel);
-        this.purchaseService = new PurchaseService(productModel, promotionModel, new CartService(cartModel),
-                new PurchaseInputParser(), new ReceiptBuilder());
+        TestObjectFactory testObjectFactory = new TestObjectFactory();
+
+        productModel = testObjectFactory.productModel;
+        cartModel = testObjectFactory.cartModel;
+        productService = testObjectFactory.productService;
+        promotionService = testObjectFactory.promotionService;
+        purchaseService = testObjectFactory.purchaseService;
     }
 
     @Test
     void 상품_구매에_성공한다() {
         // given
         productService.supply();
-        String purchaseInput = "[콜라-10],[사이다-3]";
+        promotionService.supply();
+        String purchaseInput = "[콜라-10]";
 
         // when
         purchaseService.purchase(purchaseInput);
 
         // then
-        assertThat(productModel.getProducts().get("콜라").getQuantity()).isEqualTo(0);
-        // 방어적 읽기로 인해 확인 불가
-//        assertThat(cartModel.getItems().get("콜라").getQuantity()).isEqualTo(10);
+        assertThat(productModel.getProducts().get("콜라").getQuantity()).isEqualTo(9);
+        assertThat(productModel.getProducts().get("콜라").getPromotionQuantity()).isEqualTo(1);
+        assertThat(cartModel.getItems().get("콜라").getQuantity()).isEqualTo(1);
+        assertThat(cartModel.getItems().get("콜라").getPromotionQuantity()).isEqualTo(9);
     }
 
     @Test
     void 영수증_출력에_성공한다() {
         // given
         productService.supply();
+        promotionService.supply();
         purchaseService.purchase("[콜라-10],[사이다-3]");
 
         // when
