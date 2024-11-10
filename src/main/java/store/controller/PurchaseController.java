@@ -54,9 +54,7 @@ public class PurchaseController {
         for (PurchaseDto purchaseDto : purchaseDtos) {
             purchaseProduct(purchaseDto);
         }
-        // 멤버십 적용
         calculateService.memberShip(inputView::getApplyMembership);
-        // 영수증 출력
         outputView.print(calculateService.getCalculateResult());
     }
 
