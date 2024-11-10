@@ -76,6 +76,14 @@ public class PurchaseService {
         return purchaseDto.quantity();
     }
 
+    public int purchasePromotionProduct2(PurchaseDto purchaseDto) {
+        Product product = productModel.findByName(purchaseDto.name())
+                .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
+        int min = Math.min(product.getPromotionQuantity(), purchaseDto.quantity());
+        purchasePromotionProduct(purchaseDto.name(), product.getPrice(), min, 0);
+        return purchaseDto.quantity() - min;
+    }
+
     public boolean checkCantApplyPromotion(PurchaseDto purchaseDto,
                                            BiFunction<String, Integer, String> inputFunction) {
         Product product = productModel.findByName(purchaseDto.name())
@@ -96,6 +104,11 @@ public class PurchaseService {
             cartModel.addNormalQuantity(name, price, quantity);
             return;
         }
+        productModel.decreasePromotion(name, quantity);
+        cartModel.addPromotionQuantity(name, price, quantity, freeCount);
+    }
+
+    public void purchasePromotionProduct(String name, Integer price, Integer quantity, Integer freeCount) {
         productModel.decreasePromotion(name, quantity);
         cartModel.addPromotionQuantity(name, price, quantity, freeCount);
     }

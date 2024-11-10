@@ -63,12 +63,12 @@ public class PurchaseController {
     private void purchaseProduct(PurchaseDto purchaseDto) {
         // 프로모션 상품이 노출되어 있는지 확인
         boolean applicablePromotion = purchaseService.isApplicablePromotion(purchaseDto.name());
-        int remainCount2 = purchaseDto.quantity();
+        int remainCount3 = purchaseDto.quantity();
         if (applicablePromotion) {
             // 노출되어 있으면 프로모션 상품 구매하고 남은 상품 개수 반환
             int remainCount = purchaseService.purchasePromotionProduct(purchaseDto);
             // 프로모션 추가로 적용 가능한지 확인하고 남은 상품 개수 반환
-            remainCount2 = purchaseService.checkFreePromotion(new PurchaseDto(purchaseDto.name(), remainCount),
+            int remainCount2 = purchaseService.checkFreePromotion(new PurchaseDto(purchaseDto.name(), remainCount),
                     inputView::getApplyFreeInput);
             // 프로모션 적용안되어도 괜찮은지 확인
             if (remainCount2 > 0) {
@@ -77,9 +77,11 @@ public class PurchaseController {
                     return;
                 }
             }
+            // 남은 프로모션 상품도 처리
+            remainCount3 = purchaseService.purchasePromotionProduct2(new PurchaseDto(purchaseDto.name(), remainCount2));
         }
         // 기타 일반 상품 구매 처리
-        purchaseService.purchaseNormalProduct(new PurchaseDto(purchaseDto.name(), remainCount2));
+        purchaseService.purchaseNormalProduct(new PurchaseDto(purchaseDto.name(), remainCount3));
     }
 
     private void showProductInfo() {
