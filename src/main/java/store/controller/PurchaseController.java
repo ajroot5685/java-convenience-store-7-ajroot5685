@@ -5,6 +5,7 @@ import static store.constant.Message.PURCHASE_AGAIN_GUIDE;
 import java.util.List;
 import store.constant.Message;
 import store.dto.PurchaseDto;
+import store.service.CalculateService;
 import store.service.PurchaseService;
 import store.util.RetryHandler;
 import store.view.InputView;
@@ -17,11 +18,14 @@ public class PurchaseController {
     private final InputView inputView;
     private final OutputView outputView;
     private final PurchaseService purchaseService;
+    private final CalculateService calculateService;
 
-    public PurchaseController(InputView inputView, OutputView outputView, PurchaseService purchaseService) {
+    public PurchaseController(InputView inputView, OutputView outputView, PurchaseService purchaseService,
+                              CalculateService calculateService) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.purchaseService = purchaseService;
+        this.calculateService = calculateService;
     }
 
     public void purchase() {
@@ -50,9 +54,9 @@ public class PurchaseController {
             purchaseProduct(purchaseDto);
         }
         // 멤버십 적용
-        purchaseService.memberShip(inputView::getApplyMembership);
+        calculateService.memberShip(inputView::getApplyMembership);
         // 영수증 출력
-        outputView.print(purchaseService.getCalculateResult());
+        outputView.print(calculateService.getCalculateResult());
     }
 
     private void purchaseProduct(PurchaseDto purchaseDto) {

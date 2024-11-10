@@ -14,6 +14,7 @@ import store.parse.InputParser;
 import store.parse.Parser;
 import store.parse.ProductDtoParser;
 import store.parse.PromotionParser;
+import store.service.CalculateService;
 import store.service.ProductService;
 import store.service.PromotionService;
 import store.service.PurchaseService;
@@ -57,9 +58,11 @@ public class ObjectFactory {
             promotionParser, promotionModel);
     private final SupplyService supplyService = new SupplyService(productService, promotionService);
     private final PurchaseService purchaseService = new PurchaseService(productService, productModel,
-            promotionModel, cartModel, receiptBuilder);
+            promotionModel, cartModel);
+    private final CalculateService calculateService = new CalculateService(receiptBuilder, cartModel);
 
     // controller
     public final SupplyController supplyController = new SupplyController(supplyService);
-    public final PurchaseController purchaseController = new PurchaseController(inputView, outputView, purchaseService);
+    public final PurchaseController purchaseController = new PurchaseController(inputView, outputView, purchaseService,
+            calculateService);
 }
