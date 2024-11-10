@@ -1,6 +1,7 @@
 package store.validate;
 
 import static store.constant.ExceptionMessage.INPUT_CANT_EMPTY;
+import static store.constant.ExceptionMessage.INPUT_FORMAT_ERROR;
 import static store.constant.ExceptionMessage.PRODUCT_END_WITH_RIGHT_SQUARE_BRACKET;
 import static store.constant.ExceptionMessage.PRODUCT_NAME_KOREAN;
 import static store.constant.ExceptionMessage.PRODUCT_SEPARATOR_HYPHEN;
@@ -31,7 +32,7 @@ public class InputValidator {
 
     private void validateBlank(String input) {
         if (input == null || input.isEmpty() || input.matches(EMPTY_REGEX)) {
-            throw new IllegalArgumentException(INPUT_CANT_EMPTY);
+            throw new IllegalArgumentException(INPUT_FORMAT_ERROR + INPUT_CANT_EMPTY);
         }
     }
 
@@ -45,10 +46,10 @@ public class InputValidator {
 
     private void validateSquareBracket(String input) {
         if (!input.startsWith(LEFT_SQUARE_BRACKET)) {
-            throw new IllegalArgumentException(PRODUCT_START_WITH_LEFT_SQUARE_BRACKET);
+            throw new IllegalArgumentException(INPUT_FORMAT_ERROR + PRODUCT_START_WITH_LEFT_SQUARE_BRACKET);
         }
         if (!input.endsWith(RIGHT_SQUARE_BRACKET)) {
-            throw new IllegalArgumentException(PRODUCT_END_WITH_RIGHT_SQUARE_BRACKET);
+            throw new IllegalArgumentException(INPUT_FORMAT_ERROR + PRODUCT_END_WITH_RIGHT_SQUARE_BRACKET);
         }
     }
 
@@ -58,19 +59,19 @@ public class InputValidator {
 
     private void validateFormatSize(String[] split) {
         if (split.length != SINGLE_PRODUCT_FORMAT_SIZE) {
-            throw new IllegalArgumentException(PRODUCT_SEPARATOR_HYPHEN);
+            throw new IllegalArgumentException(INPUT_FORMAT_ERROR + PRODUCT_SEPARATOR_HYPHEN);
         }
     }
 
     private void validateProductName(String productName) {
         if (!productName.matches(KOREAN_REGEX)) {
-            throw new IllegalArgumentException(PRODUCT_NAME_KOREAN);
+            throw new IllegalArgumentException(INPUT_FORMAT_ERROR + PRODUCT_NAME_KOREAN);
         }
     }
 
     private void validateQuantity(String quantity) {
         if (!isPositiveInteger(quantity)) {
-            throw new IllegalArgumentException(QUANTITY_POSITIVE_INTEGER);
+            throw new IllegalArgumentException(INPUT_FORMAT_ERROR + QUANTITY_POSITIVE_INTEGER);
         }
     }
 
@@ -85,7 +86,7 @@ public class InputValidator {
 
     public void validateChooseInput(String input) {
         if (!input.matches(CHOOSE_REGEX)) {
-            throw new IllegalArgumentException(WRONG_INPUT);
+            throw new IllegalArgumentException(INPUT_FORMAT_ERROR + WRONG_INPUT);
         }
     }
 }

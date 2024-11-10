@@ -43,7 +43,7 @@ public class ObjectFactory {
     private final ReceiptBuilder receiptBuilder = new ReceiptBuilder();
 
     // view
-    private final InputView inputView = new InputView();
+    private final InputView inputView = new InputView(inputValidator);
     private final OutputView outputView = new OutputView();
     private final ProcessView processView = new ProcessView();
 
@@ -64,6 +64,5 @@ public class ObjectFactory {
 
     // controller
     public final SupplyController supplyController = new SupplyController(outputView, supplyService);
-    public final PurchaseController purchaseController = new PurchaseController(inputView, outputView, inputValidator,
-            purchaseService);
+    public final PurchaseController purchaseController = new PurchaseController(inputView, outputView, purchaseService);
 }

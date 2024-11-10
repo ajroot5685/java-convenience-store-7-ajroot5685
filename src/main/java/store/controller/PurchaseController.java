@@ -3,7 +3,7 @@ package store.controller;
 import static store.constant.Message.PURCHASE_AGAIN_GUIDE;
 
 import store.service.PurchaseService;
-import store.validate.InputValidator;
+import store.util.RetryHandler;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -13,14 +13,11 @@ public class PurchaseController {
 
     private final InputView inputView;
     private final OutputView outputView;
-    private final InputValidator inputValidator;
     private final PurchaseService purchaseService;
 
-    public PurchaseController(InputView inputView, OutputView outputView, InputValidator inputValidator,
-                              PurchaseService purchaseService) {
+    public PurchaseController(InputView inputView, OutputView outputView, PurchaseService purchaseService) {
         this.inputView = inputView;
         this.outputView = outputView;
-        this.inputValidator = inputValidator;
         this.purchaseService = purchaseService;
     }
 
@@ -35,8 +32,7 @@ public class PurchaseController {
 
     private void process() {
         inputView.printPurchaseGuide();
-        String input = inputView.getInput();
-        inputValidator.validatePurchaseInput(input);
+        String input = RetryHandler.retryUntilSuccess(inputView::getPurchaseInput);
         purchaseService.purchase(input);
         purchaseService.memberShip();
         outputView.print(purchaseService.getCalculateResult());
@@ -44,8 +40,7 @@ public class PurchaseController {
 
     private boolean again() {
         outputView.print(PURCHASE_AGAIN_GUIDE);
-        String input = inputView.getInput();
-        inputValidator.validateChooseInput(input);
+        String input = RetryHandler.retryUntilSuccess(inputView::getRetryInput);
         if (input.equals(AGAIN)) {
             return true;
         }
