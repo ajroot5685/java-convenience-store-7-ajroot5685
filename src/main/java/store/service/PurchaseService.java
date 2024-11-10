@@ -17,17 +17,21 @@ import store.model.CartModel;
 import store.model.ProductModel;
 import store.model.PromotionModel;
 import store.parse.PurchaseInputParser;
+import store.view.ProcessView;
 
 public class PurchaseService {
 
+    private final ProcessView processView;
     private final ProductModel productModel;
     private final PromotionModel promotionModel;
     private final CartModel cartModel;
     private final PurchaseInputParser purchaseInputParser;
     private final ReceiptBuilder receiptBuilder;
 
-    public PurchaseService(ProductModel productModel, PromotionModel promotionModel, CartModel cartModel,
+    public PurchaseService(ProcessView processView, ProductModel productModel, PromotionModel promotionModel,
+                           CartModel cartModel,
                            PurchaseInputParser purchaseInputParser, ReceiptBuilder receiptBuilder) {
+        this.processView = processView;
         this.productModel = productModel;
         this.promotionModel = promotionModel;
         this.cartModel = cartModel;
@@ -46,11 +50,33 @@ public class PurchaseService {
         Product product = productModel.findByName(purchaseDto.name())
                 .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
         PromotionDto promotionDto = applicablePromotionCalculate(product, purchaseDto);
-        Integer normalCount = purchaseDto.quantity() - promotionDto.applicableCount();
-
         purchaseProduct(purchaseDto.name(), product.getPrice(), promotionDto.applicableCount(),
                 promotionDto.freeCount());
+
+        Integer normalCount = purchaseDto.quantity() - promotionDto.applicableCount();
+
+        if (product.getPromotion() != null) {
+            PromotionDto additionalFreeCount = getAdditionalFreeCount(product,
+                    purchaseDto.quantity() - promotionDto.applicableCount());
+            normalCount -= (additionalFreeCount.applicableCount() - additionalFreeCount.freeCount());
+            purchaseProduct(purchaseDto.name(), product.getPrice(), additionalFreeCount.applicableCount(),
+                    additionalFreeCount.freeCount());
+        }
+
         purchaseProduct(purchaseDto.name(), product.getPrice(), normalCount, 0);
+    }
+
+    private PromotionDto getAdditionalFreeCount(Product product, Integer quantity) {
+        Promotion promotion = promotionModel.findByName(product.getPromotion())
+                .orElseThrow(() -> new IllegalArgumentException(PROMOTION_NOT_FOUND));
+        if (promotion.getBuy().equals(quantity)) {
+            processView.printFreeProduct(product.getName(), promotion.getGet());
+            String input = processView.getChooseInput();
+            if (input.equals("Y")) {
+                return new PromotionDto(quantity + promotion.getGet(), promotion.getGet());
+            }
+        }
+        return new PromotionDto(0, 0);
     }
 
     private PromotionDto applicablePromotionCalculate(Product product, PurchaseDto purchaseDto) {

@@ -21,6 +21,7 @@ import store.service.SupplyService;
 import store.validate.InputValidator;
 import store.view.InputView;
 import store.view.OutputView;
+import store.view.ProcessView;
 
 public class ObjectFactory {
 
@@ -44,6 +45,7 @@ public class ObjectFactory {
     // view
     private final InputView inputView = new InputView();
     private final OutputView outputView = new OutputView();
+    private final ProcessView processView = new ProcessView();
 
     // model
     private final ProductModel productModel = new ProductModel();
@@ -56,7 +58,8 @@ public class ObjectFactory {
     private final PromotionService promotionService = new PromotionService(promotionFileName, convenienceDataReader,
             promotionParser, promotionModel);
     private final SupplyService supplyService = new SupplyService(productService, promotionService);
-    private final PurchaseService purchaseService = new PurchaseService(productModel, promotionModel, cartModel,
+    private final PurchaseService purchaseService = new PurchaseService(processView, productModel, promotionModel,
+            cartModel,
             purchaseInputParser, receiptBuilder);
 
     // controller
